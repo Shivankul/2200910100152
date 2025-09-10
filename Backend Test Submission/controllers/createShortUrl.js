@@ -1,4 +1,4 @@
-import shortUrl from "../models/short_url.model";
+import shortUrl from "../models/short_url.model.js";
 import { nanoid } from "nanoid";
 import dotenv from "dotenv";
 dotenv.config();
@@ -11,18 +11,17 @@ export const createShortUrl = async (req, res) => {
       return res.status(400).json({ error: "URL is required" });
     }
 
-    // If custom shortcode provided, check availability
+
     let finalCode = shortcode;
     if (shortcode) {
       const exists = await shortUrl.findOne({ shortCode: shortcode });
       if (exists) {
-        finalCode = nanoid(6); // generate new if already taken
+        finalCode = nanoid(6);
       }
     } else {
       finalCode = nanoid(6);
     }
 
-    // expiry = current time + validity (minutes)
     const expiryDate = new Date(Date.now() + validity * 60 * 1000);
 
     const newUrl = await shortUrl.create({
@@ -31,7 +30,8 @@ export const createShortUrl = async (req, res) => {
       expiry: expiryDate
     });
 
-    const shortLink = ${process.env.BASE_URL} + '/' + ${finalCode};
+    const shortLink = `${process.env.BASE_URL}/${finalCode}`;
+;
 
     return res.status(201).json({
       shortLink,
@@ -51,9 +51,8 @@ export const redirectUrl = async (req, res) => {
 
     if (!url) return res.status(404).json({ error: "Short link not found" });
 
-    // Check expiry
     if (url.expiry < new Date()) {
-      return res.status(410).json({ error: "Link expired" }); // 410 Gone
+      return res.status(410).json({ error: "Link expired" }); 
     }
 
     url.clicks++;

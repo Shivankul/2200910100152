@@ -1,6 +1,6 @@
 import express from "express"
 import connectDB from "./config/mongo.config.js";
-import { loggingMiddleware } from "../Logging Middleware/index.js";
+import { loggingMiddleware } from "./LoggingMiddleware/index.js"; 
 import urlRoutes from "./routes/urlRoutes.js";
 import dotenv from "dotenv";
 dotenv.config();
